@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
 app = Flask(__name__)
 
 
@@ -16,7 +16,7 @@ projects = [
         "thumb": "img/personal-finance.png",
         "hero": "img/habit-tracking-hero.png",
         "categories": ["react", "javascript"],
-        "slug": "habit-tracking",
+        "slug": "personal-finance",
         "prod": "",
     },
     {
@@ -24,13 +24,13 @@ projects = [
         "thumb": "img/rest-api-docs.png",
         "hero": "img/habit-tracking-hero.png",
         "categories": ["python", "web"],
-        "slug": "habit-tracking",
+        "slug": "rest-api-docs",
         "prod": "",
     }
 ]
-
-
-
+# mapped each slug to the corresponding dictionary containing it 
+# this is a very common way of indexing to find things easier
+slug_to_project = {project["slug"]: project for project in projects}
 @app.route("/")
 def home():
     return render_template("home.html", projects=projects)
@@ -44,6 +44,22 @@ def about():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+
+@app.route("/project/<string:slug>")
+def project(slug):
+    if slug not in slug_to_project:
+        abort(404)
+    else:
+        return render_template(f"project_{slug}.html", project=slug_to_project[slug])
+
+
+
+
+
+
+
+
 
 if __name__=="__main__":
     app.run(debug=True)
