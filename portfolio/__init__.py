@@ -53,9 +53,9 @@ def project(slug):
     else:
         return render_template(f"project_{slug}.html", project=slug_to_project[slug])
 
-
-
-
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
 
 
 
